@@ -1,0 +1,4325 @@
+<!doctype html>
+<!-- Shows the results of the analysis -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>DPI - Analysis</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+<link rel="shortcut icon" href="favicon.ico"
+      type="image/x-icon">
+<link rel="icon" href="favicon.ico"
+      type="image/x-icon">
+
+  </head>
+  <body>
+    
+<nav class="navbar navbar-default">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed"
+              data-toggle="collapse"
+              data-target="#my-super-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">
+        <span>
+          <img src="box-mini.png"
+               height="20" width="20">
+          DPI
+        </span>
+      </a>
+      <p class="navbar-text">
+        <strong></strong>
+      </p>
+    </div>
+    <div class="collapse navbar-collapse" id="my-super-collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="index.html">About</a></li>
+      </ul>
+    </div>
+    
+  </div><!-- /.container-fluid -->
+</nav>
+
+    
+<div class="container-fluid">
+  
+<!-- SIDEBAR -->
+<div class="col-sm-3 col-md-2 sidebar bs-docs-sidebar">
+  <div style="margin 20px"> <!-- little hack -->
+    <ul class="nav nav-stacked" id="sidebar">
+      <li>
+        <a href="#summary">
+          <i class="fa fa-folder-open fa-fw"></i>
+          <strong>Summary</strong></a>
+      </li>
+      <li>
+        <a href="#iden">
+          <i class="fa fa-file fa-fw"></i>
+          <strong>File identification</strong></a> 
+        
+        <ul class="nav nav-stacked">
+          <li><a href="#iden">General information</a></li>
+          <li><a href="#iden-tr">TrID</a></li>
+          <li><a href="#iden-aux">Auxiliary files</a></li>
+        </ul>
+        
+      </li>
+      <li>
+        <a href="#analysis">
+          <i class="fa fa-cubes fa-fw"></i>
+          <strong>Behavioural packer analysis</strong></a>
+        
+        <ul class="nav nav-stacked">
+          <li><a href="#analysis">Packer analysis</a></li>
+          <li><a href="#graph">Graph</a></li>
+          <li><a href="#analysis-last-exe-region">Last executed region</a></li>
+          <li><a href="#analysis-layer-ori-code">Potential regions with original code</a></li>
+          <li><a href="#remote-mmry-writes">Remote memory writes</a></li>
+          <li><a href="#loaded-modules">Loaded modules</a></li>
+        </ul>
+        
+      </li>
+      <li>
+        <a href="#layers">
+          <i class="fa fa-map fa-fw"></i>
+          <strong>Layers &amp; regions</strong></a>
+        
+        <ul class="nav nav-stacked">
+          <li><a href="#layers">Summary</a></li>
+          <li><a href="#layers-api">API calls</a></li>
+        </ul>
+        
+      </li>
+      <li>
+        <a href="#pe">
+          <i class="fa fa-info-circle fa-fw"></i>
+          <strong>Static PE information</strong></a>
+        
+        <ul class="nav nav-stacked">
+          <li><a href="#pe">General information</a></li>
+          <li><a href="#pe-imports">Imports</a></li>
+          <li><a href="#pe-exports">Exports</a></li>
+          <li><a href="#pe-resources">Resources</a></li>
+          <li><a href="#pe-sections">Sections</a></li>
+        </ul>
+        
+      </li>
+      <li>
+        <a href="#vt">
+          <i class="fa fa-search fa-fw"></i>
+          <strong>VirusTotal scans</strong></a>
+        
+        <ul class="nav nav-stacked">
+          
+          <li><a href="#vt-3446703d93471046e36cc0f805472976ae3dbbfac1b694d2d76636b47b1f2f80">3446703d93471046e...</a></li>
+          
+        </ul>
+        
+      </li>
+      <li>
+        <a href="#comments">
+          <i class="fa fa-commenting fa-fw"></i>
+          <strong>Comments</strong></a>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- END SIDEBAR -->
+
+<!-- RIGHT CONTENTS -->
+<div class="col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-2 main">
+  <div class="progress">
+    <div id="progress-file-iden"
+         
+         class="progress-bar progress-bar-success"
+         
+         role="progressbar" style="width:20%">
+      File identification
+    </div>
+    <div id="progress-pe-info"
+         
+         
+         class="progress-bar progress-bar-success"
+         
+         
+         role="progressbar" style="width:20%">
+      Static PE information
+    </div>
+    <div id="progress-analysis"
+         
+         class="progress-bar progress-bar-success"
+         
+         role="progressbar" style="width:20%">
+      Analysis
+    </div>
+    <div id="progress-layers" 
+         
+      class="progress-bar progress-bar-success"
+      
+      role="progressbar" style="width:20%">
+      Layers & regions
+    </div>
+    <div id="progress-vt"
+         
+         
+      class="progress-bar progress-bar-success"
+      
+      
+      role="progressbar" style="width:20%">
+      VirusTotal scans
+    </div>
+  </div>
+  <!-- show a summary -->
+  <section id="summary">
+    <div class="panel panel-info">
+      <div class="panel-heading">
+        <i class="fa fa-folder-open"></i> <strong>Summary</strong>
+        <span class="pull-right clickable">
+          <i class="glyphicon glyphicon-chevron-up"></i>
+        </span>
+      </div>
+      <div class="panel-scroll">
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td><strong>Visibility</strong></td>
+                
+                <td class="text-success">Public</td>
+                
+              </tr>
+              <tr>
+                <td><strong>Main file's SHA256</strong></td>
+                <td id="sha256">3446703d93471046e36cc0f805472976ae3dbbfac1b694d2d76636b47b1f2f80</td>
+              </tr>
+              <tr>
+                <td><a title="What is this?"
+                       href="index.html#ex-complex-types">
+                    <i class="fa fa-question-circle"></i>
+                    <strong> Complexity</strong> 
+                </a></td>
+                
+                <td><a title="Give me more info"
+                       href="index.html#type-2">
+                    Type II</a></td>
+                
+              </tr>
+              <tr>
+                <td><strong>Packer identification (signature based)</strong></td>
+                
+                
+                <td>-</td>
+                
+                
+              </tr>
+              <tr>
+                <td><strong>Number of processes</strong></td>
+                
+                <td>1</td>
+                
+              </tr>
+              <tr>
+                <td><strong>Number of layers</strong></td>
+                
+                <td>4</td>
+                
+              </tr>
+            </tbody>
+          </table>
+          
+          <div>
+            <img class="img-responsive mag graph"
+                 data-toggle="magnify"
+                 alt="Packer analysis graph"
+                 src="84971b955821b93f2266b073d8e1dc6587fa4a9fbddf363958449177f378761e20160623102732778320.png">
+          </div>
+          
+        </div>
+        
+        <div class="panel-footer">
+          <a href="84971b955821b93f2266b073d8e1dc6587fa4a9fbddf363958449177f378761e20160623102732778320.png"
+             target="_blank">Click to open on new tab</a>
+          <div class="pull-right">
+            <a href="index.html#ex-graphs">
+              <i class="fa fa-question-circle"></i> How do I read the graph?
+            </a>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        
+      </div>
+    </div>
+    
+  </section>
+  <!-- end summary -->
+  <!-- FILE IDENTIFICATION -->
+  <section id="iden">
+    <div class="row">
+      <div class="col-md-12">
+        <h3><i class="fa fa-file fa-fw"></i> File identification</h3>
+        
+        <!-- General info -->
+        <div id="iden-general" class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-info-circle"></i>
+            <strong>General information</strong>
+            <span class="pull-right clickable">
+              <i class="glyphicon glyphicon-chevron-up"></i>
+            </span>
+          </div>
+          <div class="panel-scroll table-responsive">
+            <!-- Table -->
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><strong>SHA256</strong></td>
+                  <td>3446703d93471046e36cc0f805472976ae3dbbfac1b694d2d76636b47b1f2f80</td>
+                </tr>
+                <tr>
+                  <td><strong>SHA1</strong></td>
+                  <td>8d86e494b9437613e30b59dcd57a988535082f87</td>
+                </tr>
+                <tr>
+                  <td><strong>MD5</strong></td>
+                  <td>87b1decef8edcfa341fdf51e1cc608de</td>
+                </tr>
+                <tr>
+                  <td><strong>ssdeep</strong></td>
+                  <td>96:KQ9cVsph7XVb/ZSpjlAX0SgBPTcAXM3r4C1kCJ7AIDy2bDCvHJsB:KPVspTZ+Ggv0NDJ7AtpsB</td>
+                </tr>
+                <tr>
+                  <td><strong>sdhash</strong></td>
+                  <td>sdbf:03:0::6144:sha1:256:5:7ff:160:1:88:BgODFCAgKQgSAIKKCYASRAQhaAiRLhMABaAACxABoCAg4IIIUCSkECIUABMAKCAAAISKwCAAAEACiHAIIHAAAAkACZgACIJAmAEyBmAATCABSHAkQgIiSAAFGIIAAAAC0EAAABQAAAgAQCMkgMhIDCAgMQEYhikBggFIBFkEBAZgAmAIACCgAkAFoAFQAJJAABAAOxACAAgAAGBFJRUAI5EA0AAkhCWiTTSGBYQCMACBAhQJQQ0LAEAQEgGEAAAEFAIQCIgAAMgAAgAyBCCAFAAQAAAACAAASAKABgRBAQCCEYFDkRgYAAAl4gUQYIgBABCAwAAYKCACCoAcSUCaEA==
+</td>
+                </tr>
+                <tr>
+                  <td><strong>imphash</strong></td>
+                  
+                  <td>7ecdd2a42fc06db0c768d43538dcb235</td>
+                  
+                </tr>
+                <tr>
+                  <td><strong>authentihash</strong></td>
+                  
+                  <td> - </td>
+                  
+                </tr>
+                <tr>
+                  <td><strong>File type</strong></td>
+                  <td>PE32 executable (GUI) Intel 80386 (stripped to external PDB), for MS Windows</td>
+                </tr>
+                <tr>
+                  <td><strong>MIME type</strong></td>
+                  <td>application/x-dosexec</td>
+                </tr>
+                <tr>
+                  <td><strong>First seen</strong></td>
+                  <td>2016-06-23 10:27:33</td>
+                </tr>
+                <tr>
+                  <td><strong>Size</strong></td>
+                  <td>6144</td>
+                </tr>
+                <tr>
+                  <td><Strong>Known names</strong></td>
+                  <td>87b1decef8edcfa341fdf51e1cc608de</td>
+                <tr>
+              </tbody>
+            </table>
+          </div>
+        </div> <!-- General info -->
+        <!-- File tr -->
+        
+        <div id="iden-tr" class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-file"></i>
+            <strong>TrID - File Identifier</strong>
+            <span class="pull-right clickable">
+              <i class="glyphicon glyphicon-chevron-up"></i>
+            </span>
+          </div>
+          <div class="panel-scroll table-responsive">
+            <!-- Table -->
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><strong>Percentage</strong></td>
+                  <td><strong>Type</strong></td>
+                </tr>
+                <!-- ini repeat -->
+                
+                <tr>
+                  <td>15.7%</td>
+                  <td>(.DLL) Win32 Dynamic Link Library (generic)</td>
+                </tr>
+                
+                <tr>
+                  <td>10.8%</td>
+                  <td>(.EXE) Win32 Executable (generic)</td>
+                </tr>
+                
+                <tr>
+                  <td>4.8%</td>
+                  <td>(.EXE) Generic Win/DOS Executable</td>
+                </tr>
+                
+                <tr>
+                  <td>4.7%</td>
+                  <td>(.EXE) DOS Executable Generic</td>
+                </tr>
+                
+                <tr>
+                  <td>63.7%</td>
+                  <td>(.EXE) Win32 EXE Yoda&#39;s Crypter</td>
+                </tr>
+                
+                <!-- end repeat -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- file tr --->
+        <!-- auxiliar files -->
+        
+        <h4 id="iden-aux">Auxiliary files</h4>
+        <div class="alert alert-info" role="alert">
+          <strong>None.</strong> This submission has not auxiliary files.
+        </div>
+        
+        <!-- end auxiliar files -->
+        
+      </div>
+    </div>
+  </section>
+  <!-- END file identification -->
+  <!-- ANALYSIS -->
+  <section id="analysis">
+    <div class="row">
+      <div class="col-md-12"><h3><i class="fa fa-cubes fa-fw"></i> Behavioural packer analysis report</h3></div>
+      
+      <div class="col-md-12">
+        <!-- packer analysis -->
+        <div id="analysis-packer" class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-cube"></i>
+            <strong>Packer analysis</strong>
+            <span class="pull-right clickable">
+              <i class="glyphicon glyphicon-chevron-up"></i>
+            </span>
+          </div>
+          <div class="panel-scroll table-responsive">
+            <!-- Table -->
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><a title="What is this?"
+                         href="index.html#ex-complex-types">
+                      <i class="fa fa-question-circle"></i>
+                      <strong> Complexity type</strong> 
+                    </a>
+                  </td>
+                  <td><a title="Give me more info"
+                         href="index.html#type-2">
+                      Type II</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Granularity</strong></td>
+                  
+                  <td>Not applicable</td>
+                  
+                </tr>
+                <tr>
+                  <td><strong>Execution time</strong></td>
+                  <td>302s</td>
+                </tr>
+                <tr>
+                  <td><strong>Number of processes</strong></td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td><strong>Number of layers</strong></td>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td><strong>Number of regions</strong></td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td><strong>Number of upward transitions</strong></td>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td><strong>Number of downward transitions</strong></td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td><strong>Number of multiframe layers</strong></td>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td><strong>Number of processes with interprocess communication</strong></td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td><a title="What is this?"
+                         href="index.html#api-calls">
+                      <i class="fa fa-question-circle"></i>
+                      <strong> Number of regions that call special APIs</strong> 
+</a></strong></td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- end packer analysis -->
+
+<!-- graph -->
+<div id="graph" class="panel panel-default">
+  <div class="panel-heading">
+    <i class="fa fa-sitemap"></i>
+    <strong>Graph</strong>
+    <span class="pull-right clickable">
+      <i class="glyphicon glyphicon-chevron-up"></i>
+    </span>
+  </div>
+  <div class="panel-scroll">
+    <img id="inageresource"
+         class="img-responsive mag graph"
+         data-toggle="magnify"
+         alt="Packer analysis graph"
+         src="84971b955821b93f2266b073d8e1dc6587fa4a9fbddf363958449177f378761e20160623102732778320.png">
+    <div class="panel-footer">
+      <a href="84971b955821b93f2266b073d8e1dc6587fa4a9fbddf363958449177f378761e20160623102732778320.png"
+         target="_blank">Click to open on new tab</a>
+      <div class="pull-right">
+        <a href="index.html#ex-graphs">
+          <i class="fa fa-question-circle"></i> How do I read the graph?
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end graph -->
+</div><!-- col-md-12 -->
+
+<!-- last executed region -->
+<div class="col-md-12">
+  
+  <div id="analysis-last-exe-region" class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-columns"></i>
+      <strong>Last executed region</strong>
+      <span class="pull-right clickable">
+        <i class="glyphicon glyphicon-chevron-up"></i>
+      </span>
+    </div>
+    <div class="panel-scroll table-responsive">
+      <!-- Table -->
+      <table class="table table-hover table-condensed">
+        <tbody>
+          <tr>
+            <td><strong>Process</strong></td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td><strong>Layer number</strong></td>
+            <td>3</td>
+          </tr>
+          <tr>
+            <td><strong>Region number</strong></td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td><strong>Address</strong></td>
+            <td>0x401063</td>
+          </tr>
+          <tr>
+            <td><strong>Size</strong></td>
+            <td>2265</td>
+          </tr>
+          <tr>
+            <td><strong>Memory type</strong></td>
+            <td>Module</td>
+          </tr>
+          <tr>
+            <td><strong>Number of API functions called</strong></td>
+            <td>16086</td>
+          </tr>
+          <tr>
+            <td><strong>Number of different APIs called</strong></td>
+            <td>357</td>
+          </tr>
+          <tr>
+            <td><a title="What is this?"
+                   href="index.html#api-calls">
+                <i class="fa fa-question-circle"></i>
+                <strong> Calls APIs of GetVersion* family?</strong> 
+            </a></td>
+            
+            <td>Yes</td>
+            
+          </tr>
+          <tr>
+            <td><a title="What is this?"
+                   href="index.html#api-calls">
+                <i class="fa fa-question-circle"></i>
+                <strong> Calls APIs of GetCommandLine* family?</strong></a></td>
+            
+            <td>Yes</td>
+            
+          </tr>
+          <tr>
+            <td><a title="What is this?"
+                   href="index.html#api-calls">
+                <i class="fa fa-question-circle"></i>
+                <strong> Calls APIs of GetModuleHandle* family?</strong></a></td>
+            
+            <td>Yes</td>
+            
+          </tr>
+          <tr>
+            <td><strong>Modified by external process?</strong></td>
+            
+            <td>No</td>
+            
+          </tr>
+          <tr>
+            <td><strong>Writes an executed region?</strong></td>
+            
+            <td>Yes</td>
+            
+          </tr>
+        </tbody>
+      </table>
+    </div><!-- panel table -->
+  </div><!-- default panel -->
+  
+</div>
+<!-- end last executed region -->
+
+<!-- regions potentially original -->
+<div class="col-md-12">
+  
+  <h4 id="analysis-layer-ori-code">Potential regions with original code</h4>
+  <div class="alert alert-info" role="alert">
+    <strong>Not found.</strong> Potential regions with original code not found.
+  </div>
+  
+</div>
+<!-- regions potentially original -->
+
+<!-- col-md-12 -->
+<div class="col-md-12">
+  
+  <!-- remote memory writes -->
+  
+  <div id="remote-mmry-writes" class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-repeat"></i>
+      <strong>Remote memory writes</strong>
+      <span class="pull-right clickable">
+        <i class="glyphicon glyphicon-chevron-up"></i>
+      </span>
+    </div>
+    <div class="panel-scroll">
+      <div class="active">
+        <br>
+        <ul class="list-inline text-center">
+          
+          <li><a href="#Memory unmap|deallocate-table">Memory unmap|deallocate</a></li>
+          
+        </ul>
+        <br>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-condensed">
+          
+          <thead id="Memory unmap|deallocate-table">
+            <tr>
+              <th>Type</th>
+              <th>Source address</th>
+              <th>Dest. address</th>
+              <th>Source process</th>
+              <th>Dest. process</th>
+              <th>Size</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- repeat for each memory write -->
+            
+            <tr>
+              <td>Memory unmap|deallocate</td>
+              <td>
+                -
+                
+              </td>
+              <td>0x3d0000</td>
+              <td>0</td>
+              <td>0</td>
+              <td>4096</td>
+            </tr>
+            
+            <tr>
+              <td>Memory unmap|deallocate</td>
+              <td>
+                -
+                
+              </td>
+              <td>0x3e0000</td>
+              <td>0</td>
+              <td>0</td>
+              <td>4096</td>
+            </tr>
+            
+            <tr>
+              <td>Memory unmap|deallocate</td>
+              <td>
+                -
+                
+              </td>
+              <td>0x3f0000</td>
+              <td>0</td>
+              <td>0</td>
+              <td>4096</td>
+            </tr>
+            
+            <tr>
+              <td>Memory unmap|deallocate</td>
+              <td>
+                -
+                
+              </td>
+              <td>0xa00000</td>
+              <td>0</td>
+              <td>0</td>
+              <td>4096</td>
+            </tr>
+            
+            <!-- end repeat -->
+          </tbody>
+          
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <!-- end remote memory writes -->
+  
+  <!-- modules loaded -->
+  <div id="loaded-modules" class="panel panel-default">
+    <div class="panel-heading">
+      <i class="fa fa-th"></i>
+      <strong>Loaded modules</strong>
+      <span class="pull-right clickable">
+        <i class="glyphicon glyphicon-chevron-up"></i>
+      </span>
+    </div>
+    <div class="panel-scroll table-responsive">
+      <table class="table table-hover table-condensed">
+        <tbody>
+          <tr>
+            <td><strong>By PID</strong></td>
+            <td><strong>Start address</strong></td>
+            <td><strong>Size</strong></td>
+            <td><strong>Name</strong></td>
+          </tr>
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x400000</td>
+            <td>36864</td>
+            <td><samp><strong>87b1decef8edcfa341fdf51e1cc608de</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x77da0000</td>
+            <td>704512</td>
+            <td><samp><strong>advapi32.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x77ef0000</td>
+            <td>299008</td>
+            <td><samp><strong>gdi32.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x7c800000</td>
+            <td>1060864</td>
+            <td><samp><strong>kernel32.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x746b0000</td>
+            <td>311296</td>
+            <td><samp><strong>msctf.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x77be0000</td>
+            <td>360448</td>
+            <td><samp><strong>msvcrt.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x7c910000</td>
+            <td>741376</td>
+            <td><samp><strong>ntdll.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x774b0000</td>
+            <td>1298432</td>
+            <td><samp><strong>ole32.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x770f0000</td>
+            <td>569344</td>
+            <td><samp><strong>oleaut32.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x77e50000</td>
+            <td>598016</td>
+            <td><samp><strong>rpcrt4.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x77fc0000</td>
+            <td>69632</td>
+            <td><samp><strong>secur32.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x7e390000</td>
+            <td>593920</td>
+            <td><samp><strong>user32.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+          <!-- repeat for loaded module -->
+          <tr>
+            <td>724</td>
+            <td>0x5b150000</td>
+            <td>229376</td>
+            <td><samp><strong>uxtheme.dll</strong></samp></td>
+          </tr>
+          <!-- end repeat -->
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- end modules loaded -->
+  
+</div>
+<!-- end col-md-12 -->
+ <!-- packer is none -->
+</div>
+</section>
+<!-- END ANALYSIS -->
+
+<!-- LAYERS -->
+<section id="layers">
+  <div class="row">
+    <div class="col-md-12">
+      <h3 id="layers"><i class="fa fa-map fa-fw"></i> Layers and regions</h3>
+    </div>
+    
+    <!-- Table with summary of layers/regions  -->
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-folder-open"></i>
+          <strong>Summary</strong>
+          <span class="pull-right clickable">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+          </span>
+        </div>
+        <div class="panel-scroll table-responsive">
+          <table class="table table-hover table-condensed">
+            <tbody>
+              <tr>
+                <td><strong>Layer</strong></td>
+                <td><strong>Size</strong></td>
+                <td><strong>Number of regions</strong></td>
+                <td><strong>Number of frames</strong></td>
+                <td><strong>Lowest address</strong></td>
+                <td><strong>Highest address</strong></td>
+              </tr>
+              
+              <tr>
+                <td>0</td>
+                <td>99 KB</td>
+                <td>1</td>
+                <td>0</td>
+                <td>0x407b99</td>
+                <td>0x407b99</td>
+              </tr>
+              
+              <tr>
+                <td>1</td>
+                <td>435 KB</td>
+                <td>2</td>
+                <td>2</td>
+                <td>0x401000</td>
+                <td>0x4079b1</td>
+              </tr>
+              
+              <tr>
+                <td>2</td>
+                <td>363 KB</td>
+                <td>1</td>
+                <td>1</td>
+                <td>0x4079c8</td>
+                <td>0x4079c8</td>
+              </tr>
+              
+              <tr>
+                <td>3</td>
+                <td>2327 KB</td>
+                <td>2</td>
+                <td>2</td>
+                <td>0x401063</td>
+                <td>0x407b5a</td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <!-- end summary table -->
+    
+    <!-- TESTING -->
+    <div id="layers-api" class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-external-link"></i>
+          <strong>API calls</strong>
+          <span class="pull-right clickable">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+          </span>
+        </div>
+        <div class="panel-scroll table-responsive">
+          <table class="table table-condensed table-striped"
+                 style="border-collapse:collapse;">
+          <thead>
+            <tr>
+                <th></th>
+                <th>Layer</th>
+                <th>Number of API calls</th>
+            </tr>
+          </thead>
+            
+            <tbody>
+                
+              <tr> <!-- #demo1 -->
+                <td>
+                  
+                  <button data-toggle="collapse"
+                          data-target="#layer-num-0"
+                          class="btn btn-default btn-xs"
+                          onclick="changeIconRegions(this);">
+                    <span class="fa fa-chevron-down"></span> Regions</button>
+                  
+                </td>
+                <td>0</td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td colspan="12" class="hiddenRow">
+                  <div class="accordion-body collapse"
+                       id="layer-num-0"> <!-- demo1-->
+                    <table class="table table-condensed"
+                           style="border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th>&nbsp;</th>
+                          <th>Region number</th>
+                          <th>Address space</th>
+                          <th>Number of API calls</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                        
+                        <tr class="accordion-toggle"> <!-- #demo1-region-0 -->
+                          <td>
+                            
+                            <button data-toggle="collapse"
+                                    data-target="#layer-num-0-region-0"
+                                    class="btn btn-info btn-xs btn-funs"
+                                    onclick="changeIconFuns(this);">
+                              <span class="fa fa-arrow-down"></span> Functions</button>
+                            
+                          </td>
+                          <td>0</td>
+                          <td>0x407b99-0x407bfc</td>
+                          <td>10</td>
+                        </tr>
+                        <tr>
+                          <td colspan="12" class="hiddenRow">
+                            <div class="accordion-body collapse"
+                                 id="layer-num-0-region-0">
+                              <!-- demo1-region-0 -->
+                              <table class="table table-condensed table-hover table-bordered"
+                                     style="border-collapse:collapse;">
+                                <thead>
+                                  <tr class="info">
+                                    <th class="td-center"><strong>DLL</strong></th>
+                                    <th class="td-center"><strong>Function/s</strong></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  
+                                  
+                                  
+                                  <tr>
+                                    <td>ntdll.dll</td>
+                                    <td>
+                                      <ol>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiFastSystemCall</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiFastSystemCallRet</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiUserExceptionDispatcher</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlImageDirectoryEntryToData</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlImageNtHeader</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlLeaveCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlTryEnterCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryInformationProcess</samp>
+                                        </li>
+                                        
+                                      </ol>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        
+                        
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+                
+              <tr> <!-- #demo1 -->
+                <td>
+                  
+                  &nbsp;
+                  
+                </td>
+                <td>1</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td colspan="12" class="hiddenRow">
+                  <div class="accordion-body collapse"
+                       id="layer-num-1"> <!-- demo1-->
+                    <table class="table table-condensed"
+                           style="border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th>&nbsp;</th>
+                          <th>Region number</th>
+                          <th>Address space</th>
+                          <th>Number of API calls</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                        
+                        <tr class="accordion-toggle"> <!-- #demo1-region-0 -->
+                          <td>
+                            
+                            &nbsp;
+                            
+                          </td>
+                          <td>0</td>
+                          <td>0x401000-0x40100a</td>
+                          <td>0</td>
+                        </tr>
+                        <tr>
+                          <td colspan="12" class="hiddenRow">
+                            <div class="accordion-body collapse"
+                                 id="layer-num-1-region-0">
+                              <!-- demo1-region-0 -->
+                              <table class="table table-condensed table-hover table-bordered"
+                                     style="border-collapse:collapse;">
+                                <thead>
+                                  <tr class="info">
+                                    <th class="td-center"><strong>DLL</strong></th>
+                                    <th class="td-center"><strong>Function/s</strong></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  
+                                  <tr><td>&nbsp;</td>
+                                    <td>We couldn't retrieve the functions.</td>
+                                    <td>-</td>
+                                  </tr>
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        
+                        
+                        <tr class="accordion-toggle"> <!-- #demo1-region-0 -->
+                          <td>
+                            
+                            &nbsp;
+                            
+                          </td>
+                          <td>1</td>
+                          <td>0x4079b1-0x407b5a</td>
+                          <td>0</td>
+                        </tr>
+                        <tr>
+                          <td colspan="12" class="hiddenRow">
+                            <div class="accordion-body collapse"
+                                 id="layer-num-1-region-1">
+                              <!-- demo1-region-0 -->
+                              <table class="table table-condensed table-hover table-bordered"
+                                     style="border-collapse:collapse;">
+                                <thead>
+                                  <tr class="info">
+                                    <th class="td-center"><strong>DLL</strong></th>
+                                    <th class="td-center"><strong>Function/s</strong></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  
+                                  <tr><td>&nbsp;</td>
+                                    <td>We couldn't retrieve the functions.</td>
+                                    <td>-</td>
+                                  </tr>
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        
+                        
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+                
+              <tr> <!-- #demo1 -->
+                <td>
+                  
+                  <button data-toggle="collapse"
+                          data-target="#layer-num-2"
+                          class="btn btn-default btn-xs"
+                          onclick="changeIconRegions(this);">
+                    <span class="fa fa-chevron-down"></span> Regions</button>
+                  
+                </td>
+                <td>2</td>
+                <td>509</td>
+              </tr>
+              <tr>
+                <td colspan="12" class="hiddenRow">
+                  <div class="accordion-body collapse"
+                       id="layer-num-2"> <!-- demo1-->
+                    <table class="table table-condensed"
+                           style="border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th>&nbsp;</th>
+                          <th>Region number</th>
+                          <th>Address space</th>
+                          <th>Number of API calls</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                        
+                        <tr class="accordion-toggle"> <!-- #demo1-region-0 -->
+                          <td>
+                            
+                            <button data-toggle="collapse"
+                                    data-target="#layer-num-2-region-0"
+                                    class="btn btn-info btn-xs btn-funs"
+                                    onclick="changeIconFuns(this);">
+                              <span class="fa fa-arrow-down"></span> Functions</button>
+                            
+                          </td>
+                          <td>0</td>
+                          <td>0x4079c8-0x407b33</td>
+                          <td>509</td>
+                        </tr>
+                        <tr>
+                          <td colspan="12" class="hiddenRow">
+                            <div class="accordion-body collapse"
+                                 id="layer-num-2-region-0">
+                              <!-- demo1-region-0 -->
+                              <table class="table table-condensed table-hover table-bordered"
+                                     style="border-collapse:collapse;">
+                                <thead>
+                                  <tr class="info">
+                                    <th class="td-center"><strong>DLL</strong></th>
+                                    <th class="td-center"><strong>Function/s</strong></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  
+                                  
+                                  
+                                  <tr>
+                                    <td>ntdll.dll</td>
+                                    <td>
+                                      <ol>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>_stricmp</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>bsearch</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiFastSystemCall</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiFastSystemCallRet</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrEnumerateLoadedModules</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrGetProcedureAddress</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrLoadDll</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrLockLoaderLock</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrUnlockLoaderLock</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>memmove</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAcquirePebLock</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAllocateHeap</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAnsiStringToUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlDosApplyFileIsolationRedirection_Ustr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlEnterCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlEqualUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFindActivationContextSectionString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFindCharInUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFreeHeap</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFreeUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlGetNtGlobalFlags</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlHashUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlImageDirectoryEntryToData</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitAnsiString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlLeaveCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlMultiByteToUnicodeN</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlQueryEnvironmentVariable_U</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlReleasePebLock</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlUpcaseUnicodeChar</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlValidateUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>strchr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcschr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcslen</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcsncmp</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcsrchr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwAllocateVirtualMemory</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwClose</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenKey</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryValueKey</samp>
+                                        </li>
+                                        
+                                      </ol>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+                                  
+                                  <tr>
+                                    <td>KERNEL32.DLL</td>
+                                    <td>
+                                      <ol>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetProcAddress</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>InterlockedCompareExchange</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadLibraryA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadLibraryExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadLibraryExW</samp>
+                                        </li>
+                                        
+                                      </ol>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        
+                        
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+                
+              <tr> <!-- #demo1 -->
+                <td>
+                  
+                  <button data-toggle="collapse"
+                          data-target="#layer-num-3"
+                          class="btn btn-default btn-xs"
+                          onclick="changeIconRegions(this);">
+                    <span class="fa fa-chevron-down"></span> Regions</button>
+                  
+                </td>
+                <td>3</td>
+                <td>16096</td>
+              </tr>
+              <tr>
+                <td colspan="12" class="hiddenRow">
+                  <div class="accordion-body collapse"
+                       id="layer-num-3"> <!-- demo1-->
+                    <table class="table table-condensed"
+                           style="border-collapse:collapse;">
+                      <thead>
+                        <tr>
+                          <th>&nbsp;</th>
+                          <th>Region number</th>
+                          <th>Address space</th>
+                          <th>Number of API calls</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        
+                        
+                        <tr class="accordion-toggle"> <!-- #demo1-region-0 -->
+                          <td>
+                            
+                            <button data-toggle="collapse"
+                                    data-target="#layer-num-3-region-0"
+                                    class="btn btn-info btn-xs btn-funs"
+                                    onclick="changeIconFuns(this);">
+                              <span class="fa fa-arrow-down"></span> Functions</button>
+                            
+                          </td>
+                          <td>0</td>
+                          <td>0x401063-0x40193c</td>
+                          <td>16086</td>
+                        </tr>
+                        <tr>
+                          <td colspan="12" class="hiddenRow">
+                            <div class="accordion-body collapse"
+                                 id="layer-num-3-region-0">
+                              <!-- demo1-region-0 -->
+                              <table class="table table-condensed table-hover table-bordered"
+                                     style="border-collapse:collapse;">
+                                <thead>
+                                  <tr class="info">
+                                    <th class="td-center"><strong>DLL</strong></th>
+                                    <th class="td-center"><strong>Function/s</strong></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  <tr>
+                                    <td>KERNEL32.DLL</td>
+                                    <td>
+                                      <ol>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CloseHandle</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CompareStringA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CompareStringW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CreateFileMappingA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CreateFileMappingW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CreateMutexA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CreateMutexW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DeviceIoControl</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>FindResourceA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>FindResourceExW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>FlushViewOfFile</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>FreeLibrary</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetACP</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetCommandLineA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetCurrentProcess</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetCurrentProcessId</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetCurrentThreadId</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetFullPathNameA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetLocaleInfoA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetLocaleInfoW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetModuleFileNameA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetModuleFileNameW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetModuleHandleA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetModuleHandleExW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetModuleHandleW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetProcAddress</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetStartupInfoA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetStringTypeW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetSystemDefaultUILanguage</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetSystemDirectoryA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetSystemWindowsDirectoryW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetThreadLocale</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetTickCount</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetUserDefaultLCID</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetUserDefaultUILanguage</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetVersionExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetVersionExW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GlobalAlloc</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>InitializeCriticalSectionAndSpinCount</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>InterlockedCompareExchange</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>InterlockedDecrement</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>InterlockedExchange</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>InterlockedIncrement</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsBadReadPtr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsBadStringPtrW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsBadWritePtr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsDebuggerPresent</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsValidCodePage</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadLibraryA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadLibraryExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadLibraryExW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadLibraryW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadResource</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LocalAlloc</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LocalFree</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LocalReAlloc</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>lstrcatW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>lstrcmpA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>lstrcmpiW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>lstrcpynA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>lstrlenA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>lstrlenW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MapViewOfFile</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MapViewOfFileEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MulDiv</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>OpenEventA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>OpenEventW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>OpenFileMappingA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>OpenFileMappingW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ReleaseMutex</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetEvent</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetHandleCount</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>Sleep</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SleepEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>TlsAlloc</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>TlsGetValue</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>TlsSetValue</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>UnmapViewOfFile</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>WaitForSingleObject</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>WaitForSingleObjectEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>WideCharToMultiByte</samp>
+                                        </li>
+                                        
+                                      </ol>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+                                  
+                                  <tr>
+                                    <td>ADVAPI32.dll</td>
+                                    <td>
+                                      <ol>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>AllocateAndInitializeSid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CheckTokenMembership</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ConvertSidToStringSidA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ConvertSidToStringSidW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DuplicateToken</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DuplicateTokenEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>FreeSid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetTokenInformation</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MD4Final</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MD4Init</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MD4Update</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>OpenProcessToken</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegCloseKey</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegOpenCurrentUser</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegOpenKeyExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegOpenKeyExW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegQueryValueExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegQueryValueExW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SystemFunction036</samp>
+                                        </li>
+                                        
+                                      </ol>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+                                  
+                                  <tr>
+                                    <td>ntdll.dll</td>
+                                    <td>
+                                      <ol>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>_stricmp</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>_strnicmp</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>bsearch</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CsrClientCallServer</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiFastSystemCall</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiFastSystemCallRet</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiUserCallbackDispatcher</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrAccessResource</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrAlternateResourcesEnabled</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrFindResource_U</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrFindResourceDirectory_U</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrGetDllHandle</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrGetDllHandleEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrGetProcedureAddress</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrLoadAlternateResourceModule</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrLoadDll</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrLockLoaderLock</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrQueryImageFileExecutionOptions</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrUnloadDll</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LdrUnlockLoaderLock</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>memmove</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAcquirePebLock</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlActivateActivationContextUnsafeFast</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAddAccessAllowedAce</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAddRefActivationContext</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAllocateAndInitializeSid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAllocateHeap</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAnsiStringToUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAppendUnicodeStringToString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlAppendUnicodeToString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlConvertSidToUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlCopySid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlCopyUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlCreateAcl</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlCreateSecurityDescriptor</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlCreateUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlCreateUnicodeStringFromAsciiz</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlDeactivateActivationContextUnsafeFast</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlDetermineDosPathNameType_U</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlDllShutdownInProgress</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlDosApplyFileIsolationRedirection_Ustr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlDosPathNameToNtPathName_U</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlDosSearchPath_U</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlEnterCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlEqualSid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlEqualUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFindActivationContextSectionString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFindCharInUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFindClearBits</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFindClearBitsAndSet</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFirstFreeAce</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFormatCurrentUserKeyPath</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFreeHeap</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFreeSid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlFreeUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlGetActiveActivationContext</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlGetFullPathName_U</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlGetLastWin32Error</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlGetNtGlobalFlags</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlGetNtProductType</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlGetVersion</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlHashUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlImageDirectoryEntryToData</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlImageNtHeader</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitAnsiString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitializeCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitializeCriticalSectionAndSpinCount</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitializeSid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlInitUnicodeStringEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlLeaveCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlLengthSid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlLockHeap</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlLogStackBackTrace</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlMultiAppendUnicodeStringBuffer</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlMultiByteToUnicodeN</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlNtStatusToDosError</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlNtStatusToDosErrorNoTeb</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlOpenCurrentUser</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlpEnsureBufferSize</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlQueryEnvironmentVariable_U</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlQueryInformationActivationContext</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlQueryInformationActiveActivationContext</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlReAllocateHeap</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlReleasePebLock</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlSetBits</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlSetDaclSecurityDescriptor</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlSetGroupSecurityDescriptor</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlSetLastWin32Error</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlSetOwnerSecurityDescriptor</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlSizeHeap</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlSubAuthoritySid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlTryEnterCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlUnicodeStringToAnsiString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlUnicodeToMultiByteN</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlUnicodeToMultiByteSize</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlUnlockHeap</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlUpcaseUnicodeChar</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlValidAcl</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlValidateUnicodeString</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlValidSid</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>strchr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>strncmp</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcscat</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcschr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcscpy</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcslen</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcsncmp</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcsncpy</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>wcsrchr</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwAccessCheck</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwAllocateVirtualMemory</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwClose</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwConnectPort</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwCreateMutant</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwCreateSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwDelayExecution</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwDeviceIoControlFile</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwDuplicateToken</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwFlushInstructionCache</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwFlushVirtualMemory</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwMapViewOfSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenEvent</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenFile</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenKey</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenProcessToken</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenProcessTokenEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenThreadToken</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwOpenThreadTokenEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwProtectVirtualMemory</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryAttributesFile</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryDefaultLocale</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryDefaultUILanguage</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryInformationProcess</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryInformationToken</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryInstallUILanguage</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQuerySection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQuerySystemInformation</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryValueKey</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwReleaseMutant</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwRequestWaitReplyPort</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwSetEvent</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwSetInformationObject</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwUnmapViewOfSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwWaitForSingleObject</samp>
+                                        </li>
+                                        
+                                      </ol>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+                                  
+                                  <tr>
+                                    <td>USER32.DLL</td>
+                                    <td>
+                                      <ol>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>BeginPaint</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CalcMenuBar</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CallMsgFilterW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CallNextHookEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CharNextW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CopyIcon</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CreateIconIndirect</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CreateWindowExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>CreateWindowExW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DefDlgProcW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DefWindowProcA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DefWindowProcW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DestroyIcon</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DispatchMessageW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DrawEdge</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DrawFocusRect</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DrawFrame</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DrawStateW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DrawTextA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DrawTextExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>DrawTextExW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>EndPaint</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>EnumChildWindows</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>FillRect</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>FindWindowA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetActiveWindow</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetAncestor</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetAppCompatFlags2</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetCapture</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetClassLongA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetClassLongW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetClassNameA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetClassNameW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetDC</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetDCEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetDesktopWindow</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetDlgItem</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetFocus</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetForegroundWindow</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetGUIThreadInfo</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetIconInfo</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetKeyboardLayout</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetKeyboardLayoutList</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetParent</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetProcessWindowStation</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetPropW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetSysColor</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetSystemMetrics</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetThreadDesktop</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetTitleBarInfo</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetUserObjectInformationA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetUserObjectInformationW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetWindow</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetWindowDC</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetWindowInfo</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetWindowLongW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetWindowRect</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetWindowRgnBox</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>GetWindowThreadProcessId</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>InflateRect</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>InternalGetWindowText</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsDialogMessageW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsIconic</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsRectEmpty</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsServerSideWindow</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsWindow</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsWindowInDestroy</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsWindowVisible</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>IsZoomed</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadCursorA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadCursorW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadImageA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LoadImageW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>LookupIconIdFromDirectoryEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MapWindowPoints</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MBToWCSEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MessageBoxA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MessageBoxExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MessageBoxTimeoutA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>MessageBoxTimeoutW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>NotifyWinEvent</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>OffsetRect</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>PeekMessageW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>PostThreadMessageA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>PtInRect</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegisterClassExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegisterClassW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RegisterWindowMessageA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ReleaseDC</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RemovePropW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SendMessageTimeoutW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SendMessageW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetCursor</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetFocus</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetPropW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetRect</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetRectEmpty</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetWindowLongW</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetWindowPos</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetWindowRgn</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SetWindowsHookExA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ShowWindow</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SoftModalMessageBox</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>SystemParametersInfoA</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>TranslateMessage</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>TranslateMessageEx</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>UpdateWindow</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>UserLpkPSMTextOut</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>WaitMessage</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>WCSToMBEx</samp>
+                                        </li>
+                                        
+                                      </ol>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        
+                        
+                        <tr class="accordion-toggle"> <!-- #demo1-region-0 -->
+                          <td>
+                            
+                            <button data-toggle="collapse"
+                                    data-target="#layer-num-3-region-1"
+                                    class="btn btn-info btn-xs btn-funs"
+                                    onclick="changeIconFuns(this);">
+                              <span class="fa fa-arrow-down"></span> Functions</button>
+                            
+                          </td>
+                          <td>1</td>
+                          <td>0x407b5a-0x407b98</td>
+                          <td>10</td>
+                        </tr>
+                        <tr>
+                          <td colspan="12" class="hiddenRow">
+                            <div class="accordion-body collapse"
+                                 id="layer-num-3-region-1">
+                              <!-- demo1-region-0 -->
+                              <table class="table table-condensed table-hover table-bordered"
+                                     style="border-collapse:collapse;">
+                                <thead>
+                                  <tr class="info">
+                                    <th class="td-center"><strong>DLL</strong></th>
+                                    <th class="td-center"><strong>Function/s</strong></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  
+                                  
+                                  
+                                  <tr>
+                                    <td>ntdll.dll</td>
+                                    <td>
+                                      <ol>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiFastSystemCall</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiFastSystemCallRet</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>KiUserExceptionDispatcher</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlImageDirectoryEntryToData</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlImageNtHeader</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlLeaveCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>RtlTryEnterCriticalSection</samp>
+                                        </li>
+                                        
+                                        <li class="col-md-6 col-xs-12">
+                                          <samp>ZwQueryInformationProcess</samp>
+                                        </li>
+                                        
+                                      </ol>
+                                    </td>
+                                  </tr>
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                  
+                                </tbody>
+                              </table>
+                            </div>
+                          </td>
+                        </tr>
+                        
+                        
+                        
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                </td>
+              </tr>
+              
+            </tbody>
+            
+          </table>
+        </div><!-- end table div -->
+      </div><!-- panel default -->
+    </div><!-- end table api calls-->
+    <!-- END TESTING -->
+    
+</section> 
+<!-- END LAYERS -->
+<!-- PE INFORMATION -->
+<section id="pe">
+  <div class="row">
+    <div class="col-md-12">
+      <h3><i class="fa fa-info-circle fa-fw"></i> Static PE information</h3>
+      
+      <!-- general pe info -->
+      <div id="pe-general" class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-info-circle"></i>
+          <strong>General information</strong>
+          <span class="pull-right clickable">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+          </span>
+        </div>
+        <div class="panel-scroll table-responsive">
+          <!-- Table -->
+          <table class="table table-hover table-condensed">
+            <tbody>
+              <tr>
+                <td><strong>Overlay size</strong></td>
+                
+                <td>No overlay</td>
+                
+              </tr>
+              <tr>
+                <td><strong>Target machine</strong></td>
+                
+                <td>Intel 386 or later processors and compatible processors</td>
+                
+              </tr>
+              <tr>
+                <td><strong>Compilation timestamp</strong></td>
+                
+                <td>1970-01-01 04:25:45</td>
+                
+              </tr>
+              <tr>
+                <td><strong>Entry point</strong></td>
+                
+                <td>0x407b99</td>
+                
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- end general pe info -->
+      
+      <!-- pe imports -->
+      
+      
+      <div id="pe-imports" class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-level-down"></i>
+            <strong>Imports</strong>
+            <span class="accordion-toggle pull-right clickable panel-auto-collapsed"
+                  data-toggle="collapse" data-parent="#pe-imports"
+                  data-target="#collapse-imports">
+              <i class="glyphicon glyphicon-chevron-down"></i>
+            </span>
+          </div>
+          <div id="collapse-imports" class="collapse panel-scroll">
+            <br>
+            <div class="active">
+              <ul class="list-inline text-center">
+                
+                <li><a href="#import-KERNEL32.DLL">KERNEL32.DLL</a></li>
+                
+                <li><a href="#import-OLE32.DLL">OLE32.DLL</a></li>
+                
+                <li><a href="#import-OLEAUT32.DLL">OLEAUT32.DLL</a></li>
+                
+                <li><a href="#import-USER32.DLL">USER32.DLL</a></li>
+                
+              </ul>
+            </div>
+            <br>
+            <div class="table-responsive">
+              <table class="table table-hover table-condensed table-bordered">
+                <thead>
+                <tr>
+                    <th class="td-center">DLL</th>
+                    <th class="td-center">Function/s</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- repeat for each imported function -->
+                  
+                  <tr>
+                    <td id="import-KERNEL32.DLL">KERNEL32.DLL</td>
+                    <td>
+                      <ol>
+                        
+                        <li class="col-md-6 col-xs-12"><samp>ExitProcess</samp></li>
+                        
+                        <li class="col-md-6 col-xs-12"><samp>GetProcAddress</samp></li>
+                        
+                        <li class="col-md-6 col-xs-12"><samp>LoadLibraryA</samp></li>
+                        
+                      </ol>
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td id="import-OLE32.DLL">OLE32.DLL</td>
+                    <td>
+                      <ol>
+                        
+                        <li class="col-md-6 col-xs-12"><samp>CoInitialize</samp></li>
+                        
+                      </ol>
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td id="import-OLEAUT32.DLL">OLEAUT32.DLL</td>
+                    <td>
+                      <ol>
+                        
+                        <li class="col-md-6 col-xs-12"><samp>VariantCopy</samp></li>
+                        
+                      </ol>
+                    </td>
+                  </tr>
+                  
+                  <tr>
+                    <td id="import-USER32.DLL">USER32.DLL</td>
+                    <td>
+                      <ol>
+                        
+                        <li class="col-md-6 col-xs-12"><samp>MessageBoxA</samp></li>
+                        
+                      </ol>
+                    </td>
+                  </tr>
+                  
+                  <!-- end repeat -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      
+      <!-- end pe imports -->
+      <!-- pe exports -->
+      
+      
+      
+      <h4 id="pe-exports">Exports</h4>
+      <div class="alert alert-info" role="alert">
+        <strong>None.</strong> Without exports.
+      </div>
+      
+      
+      
+      <!-- end pe export -->
+    </div><!-- col 12 of pe-->
+    <!-- col-md-12 of resources -->
+    <div class="col-md-12">
+      
+      <h4 id="pe-resources">PE resources</h4>
+      <!-- pe resource -->
+       <!--peresource length -->
+      
+      <div id="resource-1" class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-file-archive-o"></i>
+            <strong>Resource #1</strong>
+            <span class="accordion-toggle pull-right clickable panel-auto-collapsed"
+                  data-toggle="collapse"
+                  data-parent="#resource-1"
+                  data-target="#collapse-resource-1">
+              <i class="glyphicon glyphicon-chevron-down"></i>
+            </span>
+          </div><!-- panel heading -->
+          <div id="collapse-resource-1"
+               class="collapse panel-scroll table-responsive">
+            <table class="table table-hover table-condensed table-bordered">
+              <tbody>
+                <tr>
+                  <td><strong>Type</strong></td>
+                  <td><strong>Size</strong></td>
+                  <td><strong>Name</strong></td>
+                </tr>
+                <tr>
+                  <td>data</td>
+                  <td>744</td>
+                  <td>RT_ICON</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><strong>SHA256</strong></td>
+                  <td>4529baa5fb0beafd051e8eaebfa4fd9a304a6b4f423c25758e3dfe889353e4d5</td>
+                </tr>
+                <tr>
+                  <td><strong>SHA1</strong></td>
+                  <td>67176fa424623bc69114ab6a9f020f20d55a8d78</td>
+                </tr>
+                <tr>
+                  <td><strong>MD5</strong></td>
+                  <td>b3b59b1d5eac13a8f82252eefcd52b42</td>
+                </tr>
+                <tr>
+                  <td><strong>ssdeep</strong></td>
+                  <td>12:UEipZjeB1nlbaHeIq2dd5wFJIF1M/pFJ2yfFFvM9RRZums8fUNi4QaKDt0:UEiCDEeIq2dXeGFuP2BXHps2UNkK</td>
+                </tr>
+                <tr>
+                  <td><strong>sdhash</strong></td>
+                  <td>sdbf:03:0::744:sha1:256:5:7ff:160:1:7:AAAAAAAAAAAAAAAIAAAAAAAAAAAABAAAAAAAAAAAIAAgAAAIAAAAAAAAAAAAAAAAAAQAAAAAAAAAgAAAAAAAAAAACAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAgAAAAAAAgABAAAAAAAAAAAgAAAAAAAAAIAAAAAAAAAAEAAAABQAAAAABAAAAACAAAAAAAAJAAAAAAAAAAAgAAAAAAEAQAAAAABAAABAAQCAEAAAACAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAIABAAAAAAAAAAAAAAAAAAAAAA==
+</td>
+                </tr>
+              </tbody>
+            </table>
+          </div><!-- collapse -->
+        </div><!-- panel default -->
+      </div><!-- panel -group -->
+      
+      <div id="resource-2" class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-file-archive-o"></i>
+            <strong>Resource #2</strong>
+            <span class="accordion-toggle pull-right clickable panel-auto-collapsed"
+                  data-toggle="collapse"
+                  data-parent="#resource-2"
+                  data-target="#collapse-resource-2">
+              <i class="glyphicon glyphicon-chevron-down"></i>
+            </span>
+          </div><!-- panel heading -->
+          <div id="collapse-resource-2"
+               class="collapse panel-scroll table-responsive">
+            <table class="table table-hover table-condensed table-bordered">
+              <tbody>
+                <tr>
+                  <td><strong>Type</strong></td>
+                  <td><strong>Size</strong></td>
+                  <td><strong>Name</strong></td>
+                </tr>
+                <tr>
+                  <td>data</td>
+                  <td>976</td>
+                  <td>RT_VERSION</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><strong>SHA256</strong></td>
+                  <td>e8b1f36e13a66e0978a670cf0df0fdb1aadfc79d248a04436ed6974f893894c9</td>
+                </tr>
+                <tr>
+                  <td><strong>SHA1</strong></td>
+                  <td>a01a6ea13eb8b15b1e016a6cec87705a72be5bd0</td>
+                </tr>
+                <tr>
+                  <td><strong>MD5</strong></td>
+                  <td>08ed25dceddf9b94d60281521b29d9a3</td>
+                </tr>
+                <tr>
+                  <td><strong>ssdeep</strong></td>
+                  <td>24:wDPNIbzWLkbDfllNrRg+NNnb1dbDeX4kNvL1bDa5Z3rk+rwCPNhD:qVI/WefllHg+XxlmaHMOF</td>
+                </tr>
+                <tr>
+                  <td><strong>sdhash</strong></td>
+                  <td>sdbf:03:0::976:sha1:256:5:7ff:160:1:18:AgIABCAgAQgQAIAACAAARAQgQACAAAIAAAAAAAABACAAoAAAAAAAAAAAAAIAIAAAAAAAQAAAAAAAAAAAABABAAEAAAAAAAIAAAASAAAASCAAACAAQAICAAABAAAAAAAAAAAAQBAAAAAAACAAAEBAAAAAAQAIACAAAABAAEAAAAAAACAAAACAAAAEIAAAAABAAAIAABAAAAgAAABAABAAAgAAwAAAAAAAABQAAAQAEAQAAAQAQQABAAAAAgAAAAAAAAAACAgAAAAAAAACAACAEAAAAAAAAAAAAAAAAAQAAAAAAABCAAgIAAAhAAAAAIAAAAAAQAAAAAACAgAAAQAQAA==
+</td>
+                </tr>
+              </tbody>
+            </table>
+          </div><!-- collapse -->
+        </div><!-- panel default -->
+      </div><!-- panel -group -->
+      
+      <div id="resource-3" class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-file-archive-o"></i>
+            <strong>Resource #3</strong>
+            <span class="accordion-toggle pull-right clickable panel-auto-collapsed"
+                  data-toggle="collapse"
+                  data-parent="#resource-3"
+                  data-target="#collapse-resource-3">
+              <i class="glyphicon glyphicon-chevron-down"></i>
+            </span>
+          </div><!-- panel heading -->
+          <div id="collapse-resource-3"
+               class="collapse panel-scroll table-responsive">
+            <table class="table table-hover table-condensed table-bordered">
+              <tbody>
+                <tr>
+                  <td><strong>Type</strong></td>
+                  <td><strong>Size</strong></td>
+                  <td><strong>Name</strong></td>
+                </tr>
+                <tr>
+                  <td>MS Windows icon resource - 1 icon</td>
+                  <td>20</td>
+                  <td>RT_GROUP_ICON</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><strong>SHA256</strong></td>
+                  <td>a0c9d012e2bf6b2fe05c2d97cb5594d97cf2f539e97935c12abd7a3562f4d9bf</td>
+                </tr>
+                <tr>
+                  <td><strong>SHA1</strong></td>
+                  <td>a022d5c1cfdd8aace0089f3e72f2eedd41bda464</td>
+                </tr>
+                <tr>
+                  <td><strong>MD5</strong></td>
+                  <td>42cf62b780813706e75fb9f2b2e8c258</td>
+                </tr>
+                <tr>
+                  <td><strong>ssdeep</strong></td>
+                  <td>3:wX/sn:9n</td>
+                </tr>
+                <tr>
+                  <td><strong>sdhash</strong></td>
+                  <td>Not applicable</td>
+                </tr>
+              </tbody>
+            </table>
+          </div><!-- collapse -->
+        </div><!-- panel default -->
+      </div><!-- panel -group -->
+      <!-- for rs -->
+      <!-- peresource length -->
+      <!-- peinfo -->
+    </div><!-- col-md-12 of resources -->
+
+    <!-- pe sections -->
+    <div class="col-md-12"><!-- col-md-12 sections -->
+      
+      <h4 id="pe-sections">PE sections</h4>
+      <!-- Pe sections -->
+      <!-- length of sections -->
+      
+      <div id="section-1" class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-square-o"></i>
+            <strong>Section #1: aUSv0.5</strong>
+            <span class="accordion-toglle pull-right clickable panel-auto-collapsed"
+                  data-toggle="collapse"
+                  data-parent="#section-1"
+                  data-target="#collapse-section-1">
+              <i class="glyphicon glyphicon-chevron-down"></i>
+            </span>
+          </div><!-- panel heading -->
+          <div id="collapse-section-1"
+               class="collapse panel-scroll table-responsive">
+            <table class="table table-hover table-condensed table-bordered">
+              <tbody>
+                <tr>
+                  <td><strong>Name</strong></td>
+                  <td><strong>Type</strong></td>
+                  <td><strong>Entropy</strong></td>
+                  <td><strong>Raw address</strong></td>
+                  <td><strong>Raw size</strong></td>
+                  <td><strong>Virtual address</strong></td>
+                  <td><strong>Virtual size</strong></td>
+                  <td><strong>Flags</strong></td>
+                </tr>
+                <tr>
+                  <td>aUSv0.5</td>
+                  <td>Data</td>
+                  <td>0.0</td>
+                  <td>0x6000</td>
+                  <td>0</td>
+                  <td>0x1000</td>
+                  <td>24576</td>
+                  <td>0x20000000, 0x7fffffff, 0x80, 0x40000000</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><strong>SHA256</strong></td>
+                  <td>e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</td>
+                </tr>
+                <tr>
+                  <td><strong>SHA1</strong></td>
+                  <td>da39a3ee5e6b4b0d3255bfef95601890afd80709</td>
+                </tr>
+                <tr>
+                  <td><strong>MD5</strong></td>
+                  <td>d41d8cd98f00b204e9800998ecf8427e</td>
+                </tr>
+                <tr>
+                  <td><strong>ssdeep</strong></td>
+                  <td>3::</td>
+                </tr>
+                <tr>
+                  <td><strong>sdhash</strong></td>
+                  <td>Not applicable</td>
+                </tr>
+              </tbody>
+            </table>
+          </div><!-- panel responsive - scroll -->
+        </div> <!-- panel panel default -->
+      </div><!-- panel group -->
+      
+      <div id="section-2" class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-square-o"></i>
+            <strong>Section #2: aUSv0.5</strong>
+            <span class="accordion-toglle pull-right clickable panel-auto-collapsed"
+                  data-toggle="collapse"
+                  data-parent="#section-2"
+                  data-target="#collapse-section-2">
+              <i class="glyphicon glyphicon-chevron-down"></i>
+            </span>
+          </div><!-- panel heading -->
+          <div id="collapse-section-2"
+               class="collapse panel-scroll table-responsive">
+            <table class="table table-hover table-condensed table-bordered">
+              <tbody>
+                <tr>
+                  <td><strong>Name</strong></td>
+                  <td><strong>Type</strong></td>
+                  <td><strong>Entropy</strong></td>
+                  <td><strong>Raw address</strong></td>
+                  <td><strong>Raw size</strong></td>
+                  <td><strong>Virtual address</strong></td>
+                  <td><strong>Virtual size</strong></td>
+                  <td><strong>Flags</strong></td>
+                </tr>
+                <tr>
+                  <td>aUSv0.5</td>
+                  <td>Data</td>
+                  <td>7.7036</td>
+                  <td>0x1000</td>
+                  <td>3072</td>
+                  <td>0x7000</td>
+                  <td>4096</td>
+                  <td>0x20000000, 0x40, 0x7fffffff, 0x40000000</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><strong>SHA256</strong></td>
+                  <td>5ea1a71cf86e6d469a1216460092e440d2ae8b14f270e89cf1316545de501c77</td>
+                </tr>
+                <tr>
+                  <td><strong>SHA1</strong></td>
+                  <td>0779c6fb2e5132e4111e064589c144a887cb4151</td>
+                </tr>
+                <tr>
+                  <td><strong>MD5</strong></td>
+                  <td>203271ad04961f0f2fb1aeacc78628bd</td>
+                </tr>
+                <tr>
+                  <td><strong>ssdeep</strong></td>
+                  <td>48:7HYlePsphBBXQkb/H5/KzicMLgUGwIiXX0SgBPpxcAXBZ433k1O+mVNBgFO91JW0:7Vsph7XVb/ZSpjlAX0SgBPTcAXM3r4Cf</td>
+                </tr>
+                <tr>
+                  <td><strong>sdhash</strong></td>
+                  <td>sdbf:03:0::3072:sha1:256:5:7ff:160:1:48:BgEDFAAgKAAAAACCAYASAAABSAgRKhMABaAAAgABgAAAAIIAUAQkAAIUABAQCCAAAACIgCAAAEAACDAIIEgAAAgAAZgAAAAAGAEgBiAABAAACAAkAgAACAAECIIAAAACkAAAAAQAAAAAAAAkgIQACCAgIAEQggkBAgEIABEEBARgAEgIACAgAgAAAAEAAJIAABAAGwACAAAAAAAFIQUAAYEAAAAkBCWiSSACBIACIACAAhAIAAkIAAAQEAEEAAAEEAAQAIAAAMgAAgAyBCAAAAAQAAAACAAASAKAAABBAACCEAEDkBAAAAAE4gEAQAgAABCAAAAICCAACIAESEAKEA==
+</td>
+                </tr>
+              </tbody>
+            </table>
+          </div><!-- panel responsive - scroll -->
+        </div> <!-- panel panel default -->
+      </div><!-- panel group -->
+      
+      <div id="section-3" class="panel-group">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <i class="fa fa-square-o"></i>
+            <strong>Section #3: .rsrc</strong>
+            <span class="accordion-toglle pull-right clickable panel-auto-collapsed"
+                  data-toggle="collapse"
+                  data-parent="#section-3"
+                  data-target="#collapse-section-3">
+              <i class="glyphicon glyphicon-chevron-down"></i>
+            </span>
+          </div><!-- panel heading -->
+          <div id="collapse-section-3"
+               class="collapse panel-scroll table-responsive">
+            <table class="table table-hover table-condensed table-bordered">
+              <tbody>
+                <tr>
+                  <td><strong>Name</strong></td>
+                  <td><strong>Type</strong></td>
+                  <td><strong>Entropy</strong></td>
+                  <td><strong>Raw address</strong></td>
+                  <td><strong>Raw size</strong></td>
+                  <td><strong>Virtual address</strong></td>
+                  <td><strong>Virtual size</strong></td>
+                  <td><strong>Flags</strong></td>
+                </tr>
+                <tr>
+                  <td>.rsrc</td>
+                  <td>Data</td>
+                  <td>3.44702</td>
+                  <td>0x1000</td>
+                  <td>2560</td>
+                  <td>0x8000</td>
+                  <td>4096</td>
+                  <td>0x40, 0x7fffffff, 0x40000000</td>
+                </tr>
+              </tbody>
+            </table>
+            <table class="table table-hover table-condensed">
+              <tbody>
+                <tr>
+                  <td><strong>SHA256</strong></td>
+                  <td>2a4608767c817de1dc23cf3b15eb5184669e5b00bd52789fb2b6a3f21eda4e37</td>
+                </tr>
+                <tr>
+                  <td><strong>SHA1</strong></td>
+                  <td>958b87fc6031205bdc6e0df376abc47a38eefbe7</td>
+                </tr>
+                <tr>
+                  <td><strong>MD5</strong></td>
+                  <td>9ad15c4d13b3e3e873999d3f425fc4ea</td>
+                </tr>
+                <tr>
+                  <td><strong>ssdeep</strong></td>
+                  <td>48:pZAEJFc2Nps284VI/WefllHg+XxlmaHMO+B:pDy2bDCvHJsB</td>
+                </tr>
+                <tr>
+                  <td><strong>sdhash</strong></td>
+                  <td>sdbf:03:0::2560:sha1:256:5:7ff:160:1:33:AgIABCAgAQgSAIAKCAAARAQgYACABAIAAIAAARABICAgoAAIACCAEAAAAAMAIAAAAASAQAAAAAAAgEAAADAAAAEACAAACIIAAAASAEAASCAAQFAAQAICAAABEAAAAAAAAEAAABAAAAgAQCIAAEhIBAAAAQAIACEAgABAAEAAAAIAACAAAACAAEAEoABQAABAABAAABACAAgAAEBAJBAAIhEA0AAAgAAAABSEAQQAEAABAAQBQQQDAEAAAgCAAAAABAAACAgAAAAAAAACAACAEAAAAAAAAAAAAAAAAgQAAQAAAYBCAQgIAAAhAAQQIIABAAAAwAAQAAACAgAYAQAQAA==
+</td>
+                </tr>
+              </tbody>
+            </table>
+          </div><!-- panel responsive - scroll -->
+        </div> <!-- panel panel default -->
+      </div><!-- panel group -->
+      
+      <!-- repeat for each section -->
+       <!-- end sections length is 0 -->
+    </div><!-- col-md-12 of sections -->
+    <!-- end pe sections -->
+    
+  </div>
+</section>
+<!-- END PE INFORMATION -->
+<!-- VIRUS TOTAL -->
+<section id="vt">
+  <div class="row">
+    <div class="col-md-12">
+      <h3><i class="fa fa-search fa-fw"></i> Virus Total scans</h3>
+      
+      
+      <h4 id="vt-3446703d93471046e36cc0f805472976ae3dbbfac1b694d2d76636b47b1f2f80">File: 3446703d93471046e36cc0f805472976ae3dbbfac1b694d2d76636b47b1f2f80</h4>
+      
+      
+      <!-- show the results -->
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <i class="fa fa-search"></i>
+          <strong>Scan date: 2016-03-02 11:50:18</strong>
+          <span class="pull-right clickable">
+            <i class="glyphicon glyphicon-chevron-up"></i>
+          </span>
+        </div>
+        <div class="panel-scroll table-responsive">
+          <table class="table table-hover table-condensed">
+            <thead>
+              <tr>
+                <td><strong>Antivirus</strong></td>
+                <td><strong>Result</strong></td>
+                <td><strong>Update</strong></td>
+              </tr>
+            </thead>
+            <tbody>
+              
+              <tr  class="danger" >
+                <td>Ad-Aware</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Tdss.2987</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>AegisLab</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Agnitum</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160301</td>
+              </tr>
+              
+              <tr >
+                <td>AhnLab-V3</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Alibaba</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>ALYac</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Tdss.2987</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Antiy-AVL</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Arcabit</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Tdss.DBAB</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Avast</td>
+                
+                <td class="text-danger">
+                  <strong>Win32:Malware-gen</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>AVG</td>
+                
+                <td class="text-danger">
+                  <strong>Dropper.Generic2.AHGK</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Avira</td>
+                
+                <td class="text-danger">
+                  <strong>TR/Crypt.ULPM.Gen</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>AVware</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Win32.Generic!BT</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Baidu-International</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>BitDefender</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Tdss.2987</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Bkav</td>
+                
+                <td class="text-danger">
+                  <strong>HW32.Packed.EF5A</strong>
+                </td>
+                
+                <td>20160301</td>
+              </tr>
+              
+              <tr >
+                <td>ByteHero</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>CAT-QuickHeal</td>
+                
+                <td class="text-danger">
+                  <strong>(Suspicious) - DNAScan</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>ClamAV</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>CMC</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160301</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Comodo</td>
+                
+                <td class="text-danger">
+                  <strong>Packed.Win32.MUPX.Gen</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Cyren</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>DrWeb</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Emsisoft</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Tdss.2987 (B)</strong>
+                </td>
+                
+                <td>20160229</td>
+              </tr>
+              
+              <tr >
+                <td>ESET-NOD32</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>F-Prot</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>F-Secure</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Tdss.2987</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Fortinet</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>GData</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Tdss.2987</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Ikarus</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Jiangmin</td>
+                
+                <td class="text-danger">
+                  <strong>TrojanDropper.TDSS.xk</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>K7AntiVirus</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>K7GW</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Kaspersky</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Malwarebytes</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>McAfee</td>
+                
+                <td class="text-danger">
+                  <strong>Artemis!87B1DECEF8ED</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>McAfee-GW-Edition</td>
+                
+                <td class="text-danger">
+                  <strong>BehavesLike.Win32.BadFile.xh</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Microsoft</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>MicroWorld-eScan</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Tdss.2987</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>NANO-Antivirus</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>nProtect</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan/W32.Agent.6144.IC</strong>
+                </td>
+                
+                <td>20160229</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Panda</td>
+                
+                <td class="text-danger">
+                  <strong>Trj/CI.A</strong>
+                </td>
+                
+                <td>20160301</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Qihoo-360</td>
+                
+                <td class="text-danger">
+                  <strong>Win32/Trojan.b87</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Rising</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Sophos</td>
+                
+                <td class="text-danger">
+                  <strong>Mal/Generic-S</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>SUPERAntiSpyware</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Symantec</td>
+                
+                <td class="text-danger">
+                  <strong>Packed.Generic.154</strong>
+                </td>
+                
+                <td>20160301</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Tencent</td>
+                
+                <td class="text-danger">
+                  <strong>Win32.Trojan.Tdss.bzkb</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>TheHacker</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan/Dropper.TDSS.dti</strong>
+                </td>
+                
+                <td>20160301</td>
+              </tr>
+              
+              <tr >
+                <td>TotalDefense</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>TrendMicro</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>TrendMicro-HouseCall</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>VBA32</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>VIPRE</td>
+                
+                <td class="text-danger">
+                  <strong>Trojan.Win32.Generic!BT</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>ViRobot</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr  class="danger" >
+                <td>Zillya</td>
+                
+                <td class="text-danger">
+                  <strong>Dropper.TDSS.Win32.3833</strong>
+                </td>
+                
+                <td>20160302</td>
+              </tr>
+              
+              <tr >
+                <td>Zoner</td>
+                
+                <td class="text-success">
+                  <strong>Not detected</strong></td>
+                
+                <td>20160302</td>
+              </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      
+      
+      
+    </div>
+  </div>
+</section>
+<!-- END VIRUS TOTAL -->
+
+<!-- COMMENTS -->
+<section id="comments">
+  <div class="row">
+    <hr>
+    <div class="col-md-12">
+      <h3><i class="fa fa-commenting fa-fw"></i> Comments</h3>
+      
+      <div class="alert alert-info" role="alert">
+        We haven't comments for this file.
+      </div>
+            
+      <br>
+    </div>
+  </div>
+  <!-- END COMMENTS -->
+  <!--/div-->
+</section>
+</div>
+<!-- END RIGHT CONTENTS -->
+</div>
+
+
+
+</div>
+<footer class="doc-footer">
+  <div class="container">
+    <p>
+      &copy; 2015 - <span id="CURRENTYEAR"></span> DeustoTech
+      <br>
+    </p> 
+    <p><a href="disclaimer.html">Disclaimer</a>&nbsp;&nbsp;&nbsp;
+      |&nbsp;&nbsp;&nbsp;<a href="index.html#reference">Reference</a>
+      |&nbsp;&nbsp;&nbsp;<a href="contact.html">Contact</a>
+    </p>
+    <img src="box-mini.png"
+         height="20" width="20">
+    <br><p>~</p>
+    <p>DPI 0.1.0</p>
+  </div>
+</footer>
+<script src="https://code.jquery.com/jquery-2.2.3.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+   
+    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script-->
+<link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet"
+      href="style.css">
+<!-- script src="/ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script -->
+<!-- chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<!-- magnify -->
+<link rel="stylesheet" href="bootstrap-magnify.min.css">
+<script src="bootstrap-magnify.min.js"></script>
+<!-- custom -->
+<script src="script.js"></script>
+  
+  </body>
+</html>

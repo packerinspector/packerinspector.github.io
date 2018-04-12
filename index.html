@@ -1,0 +1,763 @@
+<!doctype html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Deep Packer Inspector</title>
+    <meta charset="utf-8">
+    <meta name="google-site-verification" content="l42WiIZ0iUMJleZ27sKMwZRCLp2cmE6U-u9W77VaZeE" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link rel="shortcut icon" href="/favicon.ico"
+      type="image/x-icon">
+<link rel="icon" href="favicon.ico"
+      type="image/x-icon">
+<!-- Cookie policy -->
+<script type="text/javascript">
+    window.cookieconsent_options = {"message":"This website utilizes cookies, by using this website you allow us to place cookies on your computer.","dismiss":"Got it!","learnMore":"","link":"","theme":"light-bottom"};
+</script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/1.0.9/cookieconsent.min.js"></script>
+
+  </head>
+  <body>
+    
+<nav class="navbar navbar-default">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed"
+              data-toggle="collapse"
+              data-target="#my-super-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">
+        <span>
+          <img src="box-mini.png"
+               height="20" width="20">
+           Deep Packer Inspector
+        </span>
+      </a>
+      <p class="navbar-text">
+        <strong></strong>
+      </p>
+    </div>
+    
+  </div><!-- /.container-fluid -->
+</nav>
+
+    
+<div class="container-fluid">
+  
+<div class="container">
+  <div class="col-md-12">
+  <div class="alert alert-warning" role="alert">
+  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+  <span class="sr-only">Error:</span>
+  Deep Packer Inspector is currently <strong>under maintenance</strong> and 
+  will be available soon.
+</div>
+  </div>
+  <div class="doc-center">
+    <img src="box.png">
+    <div class="col-md-12">
+      <h3>Deep Packer Inspector</h3>
+      <h5>a service based on:</h5>
+      <h3>SoK: Deep Packer Inspection:</h3>
+      <h4>A Longitudinal Study of the Complexity of Run-Time Packers</h4>
+      <h5><em>Ugarte-Pedrero, Xabier; Balzarotti, Davide; Santos, Igor; Bringas,
+          Pablo G.</em></h5>
+      <ul class="list-unstyled">
+        <li>
+          <a href="oakland-2015-dpi.pdf">
+            Document (pdf)
+          </a>
+        </li>
+        <li><a href="oakland-2015-dpi.bib">
+            Bibtex</a></li>
+      </ul>
+      <div class="col-md-6">
+        <img class="img-responsive center-block"
+             src="eurecom.jpeg">
+        <a href="http://s3.eurecom.fr/">
+          EURECOM - Software and System Security Group</a>
+      </div>
+      <div class="col-md-6">
+        <img class="img-responsive center-block"
+             src="deustotech-logo.png">
+        <br>
+        <a href="http://ingenieria.deusto.es/cs/Satellite/ingenieria/en/deustotech">
+          DeustoTech, University of Deusto</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="page-header">
+      <h2 id="about">About</h2>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <ul>
+      <li><a href="#what-is-dpi">What is PackerInspector?</a></li>
+      <li><a href="#how-it-works">How does it work?</a></li>
+      <li><a href="#team">Team</a></li>
+    </ul>
+  </div>
+  <div class="col-md-12">
+    <h3 id="what-is-dpi">What is PackerInspector?</h3>
+  </div>
+  <div class="col-md-12 text-justify">
+    <p>PackerInspector is an online service that will help you understand the
+      complexity of run-time packers. This tool analyzes Windows PE-executables
+      and generates reports that show the complexity of the packer, a graph
+      representing its structure and several features that characterize the
+      behaviour of a packer.
+    </p>
+    <p>
+      In addition to dynamic analysis, static analysis is leveraged to extract
+      general information about the PE file. Finally, we check the sample's hash
+      against <a href="https://www.virustotal.com/en/about/">VirusTotal</a>'s
+      database.
+    </p>
+    <h4><b>Extracted information</b></h4>
+    <p>The static analysis generates the following info:</p>
+    <ol>
+      <li><b>General File identification:</b> hashes, fuzzy hashes, file and
+        MIME type, known names of the sample, TrID file identification and known
+        Yara rules' results.
+      </li>
+      <li><b>General PE file information</b>: overlay size, target machine,
+        compilation timestamp, entry point, imports, exports, resources and
+        sections.
+      </li>
+    </ol>
+    <p>The dynamic analysis yields the following results:</p>
+    <ol>
+      <li><b>General features of the packer:</b>
+        <ul>
+          <li>Execution time</li>
+          <li>Granularity of the packer</li>
+          <li>Number of processes</li>
+          <li>Number of layers</li>
+          <li>Number of regions</li>
+          <li>Number of forward and backward transitions</li>
+          <li>Number of multiframe layers</li>
+          <li>Number of processes that communicate</li>
+          <li>Number of regions with special APIs</li>
+        </ul>
+      </li>
+      Initially you may not understand all these features, but this page should
+      help you go through the reports and extract useful information.
+      <li><b>Unpacking graph</b>: a graph-viz generated graph that shows how
+        the different memory regions of the binary are structured in terms of
+        layers and unpacking behavior.
+      </li>
+      <li><b>Last executed region.</b> Shows several properties for the last
+        memory region executed during analysis: process and region,
+        base address, size, memory type, number of total and different APIs
+        executed, whether the region was remotely modified or modified an
+        executed region.
+      </li>
+      <li>Applies heuristics to obtain a <b>list of regions that potentially
+          contain the original code</b>.
+      </li>
+      <li><b>Memory dump/s</b> of the processes that potentially contain the
+        original code. Available for registered users.</li>
+      <li><b>Remote memory writes:</b> specify the type 
+        (Memory unmap|deallocate, ReadFile etc), source and destination
+        addresses, source and destination
+        processes, and size.
+      </li>
+      <li><b>Loaded modules:</b> name, PID, start address and size.
+      </li>
+      <li><b>Layers and regions:</b> summary of the layers of the sample with 
+        their size, number of regions and frames, lowest address, highest
+        address and the number of API calls with DLL and function name per
+        layer and region.
+      </li>
+    </ol>
+  </div>
+  <div class="col-md-12">
+    <h3 id="how-it-works">How does it work?</h3>
+  </div>
+  <div class="col-md-12 text-justify">
+    <p>You will be able to submit samples to PackerInspector using its
+      main page.</p>
+    <p>If you submit more than one file at the same time you must specify
+      which is the main PE file, the other files will be treated as auxiliary
+      files needed in the analysis phase. Please note that both the main and
+      auxiliary files cannot exceed the <b>8MB</b> file upload limit.
+    </p>
+    <p>Once the file/s have been submitted you will be redirected to the
+      Report Page, there the results will be displayed as soon as they are
+      available.
+    </p>
+    <p>In the Report Page a progress bar is shown to display the progress of
+      sample's analysis, which is divided into five phases: File
+      identification, PE information, Analysis, Layers & Regions and
+      VirusTotal scans.</p>
+  </div>
+  <div class="col-md-8">
+    <div class="progress">
+      <div id="progress-file-iden" class="progress-bar progress-bar-success"
+           role="progressbar" style="width:20%">
+        File identification
+      </div>
+      <div id="progress-pe-info" class="progress-bar progress-bar-success"
+           role="progressbar" style="width:20%">
+        PE information
+      </div>
+      <div id="progress-analysis" class="progress-bar progress-bar-danger"
+           role="progressbar" style="width:20%">
+        Analysis
+      </div>
+      <div id="progress-layers" class="progress-bar progress-bar-danger"
+           role="progressbar" style="width:20%">
+        Layers &amp; regions
+      </div>
+      <div id="progress-vt" class="progress-bar progress-bar-warning"
+           role="progressbar" style="width:20%">
+        VirusTotal scans
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12 text-justify">
+    <p>
+      An uncompleted phase is shown in orange, a completed phase is shown in
+      green, and a phase colored in red means that there was an error in such
+      phase. Note that errors in the Analysis and Layer & regions phases may
+      be produced by different causes: a timeout was reached in the analysis,
+      the file format was not supported, or an error during the analysis process.
+    </p>
+
+    <p>If you don't have an account on PackerInspector you must remember the
+      Report Page's URL to access to the results; otherwise, you can access your
+      reports through the Status Page and see the progress of the analysis:
+      <b class="text-muted">Submitted</b> (the sample is in our system),
+      <b class="text-warning">Queued</b>
+      (the sample its being analyzed) or
+      <b class="text-success">Finished</b>.
+    </p>
+      <h4>Examples</h4>
+        <ul>
+          <li><a href="type-1-example.html">A sample packed with UPX
+              (Type-I).</a></li>
+          <li><a href="type-2-example.html">A sample packed with an unknown
+              packer (Type-II).</a></li>
+          <li><a href="type-3-example.html">A sample packed with Themida
+              (Type-III).</a></li>
+          <li><a href="type-4-example.html">A sample packed with Upack
+              (Type-IV).</a></li>
+          <li><a href="type-5-example.html">A sample packed with Beria
+              (Type-V).</a></li>
+          <li><a href="type-6-example.html">A sample packed with Armadillo
+              (Type-VI).</a></li>
+        </ul>
+  </div>
+
+  <div class="col-md-12">
+      <h3 id="team">Team</h3>
+      Deep Packer Inspector has been created with the collaboration of:
+      <ul>
+        <li>Xabier Ugarte-Pedrero.</li>
+        <li><a href="http://s3.eurecom.fr/~balzarot/">Davide Balzarotti</a>
+          , EURECOM.</li>
+        <li>Irene Díez-Franco, DeustoTech, University of Deusto.</li>
+      </ul>
+    </div>
+
+  <div class="col-md-12">
+    <div class="page-header">
+      <h2 id="reference">Reference</h2>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <ul>
+      <li><a href="#packer-ex">Understanding the collected information</a></li>
+      <li><a href="#ex-complex-types">Packer Complexity Types</a></li>
+      <li><a href="#ex-graphs">How to interpret graphs</a></li>
+    </ul>
+  </div>
+  <div class="row text-justify" id="packer-ex">
+    <div class="col-md-12">
+      <h3>Understanding the collected information</h3>
+      <p>This system collects different events during the execution of the
+        sample. Afterwards, we compute a set of properties that measure the
+        complexity of a run-time packer.
+        These properties capture different aspects of an
+        unpacking process, and combined together, allow us to classify packers
+        into six classes of incremental complexity (see 
+        <a href="#ex-complex-types">Packer Complexity Types</a>).</p>
+      <p>For a formal description of these properties, refer to our research
+        presented at
+        <a href="/oakland-2015-dpi.pdf" target="_blank">IEEE
+          Security and Privacy.</a>
+      </p>
+      <div class="row">
+        <div class="col-md-4">
+          <h4>1. Layers</h4>
+          <p>A <i>layer</i> represents the set of instructions that were
+            modified by (at least) the previous layer (and afterwards executed).
+          </p>
+          <p>An instruction belongs to layer 0 (first layer) if it was present
+            in the binary when it was loaded in memory (i.e., it was not
+            modified, decoded, or decrypted at run-time). Whenever a new 
+            instruction is executed, we will find the deepest layer (l) that
+            modified its overlapping memory, and assign it to the following
+            layer (l+1) of a set of instructions executed at that layer,
+            and the memory addresses modified by those instructions.</p>
+          <p>Types:</p>
+          <ol>
+            <li id="layers-single"><strong>Single:</strong> Single layer packers
+              contain one layer for the unpacking routine, and one single layer
+              for the unpacked content</li>
+            <li id="layers-multi"><strong>Multi-layer:</strong> Multi-layer
+              packers contain more than one layer of unpacked code.
+            </li>
+          </ol>
+        </div>
+        <div class="col-md-4">
+          <h4>2. Transitions</h4>
+          <p>A <i>transition</i> occurs when the execution "jumps" from one
+            layer to another layer.</p>
+          <p><i>Forward transitions</i> bring the execution to a higher layer,
+            whereas <i>backward transitions</i> jump back to a previously
+            unpacked layer.
+          </p>
+          <p>Overall, a run-time packer can present two different transition
+            models:</p>
+          <ol>
+            <li id="transi-lineal"><strong>Linear:</strong> there is only one
+              transition from each layer to the following one.
+            </li>
+            <li id="transi-cyclic"><strong>Cyclic:</strong> the packer has
+              backward transitions from a layer to one of its predecessors.
+            </li>
+          </ol>
+        </div>
+        <div class="col-md-4">
+          <h4>3. Isolation</h4>
+          <p>This feature measures the interaction between the unpacking code and
+            the protected code.</p>
+          <p>Types:</p>
+          <ol>
+            <li id="isolation-tail-trans"><strong>Tail Transition</strong>
+              packers execute all the unpacking code, and once the original
+              application has been recovered, the execution is redirected to it.
+            </li>
+            <li id="isolation-interleaved"><strong>Interleaved</strong> packers
+              mix the execution of certain parts of the unpacking routine with
+              the original application code.
+            </li>
+          </ol>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <h4>4. Frames</h4>
+          <p>A layer can be unpacked at different times. For instance, we might
+            observe that the unpacking routine first recovers and executes a
+            part of the original code. Later during the execution, it might
+            recover a different part (e.g., a different routine), and execute
+            it. Since both routines would have been modified by the same layer,
+            both would belong to the same laye.</p>
+          <p>An unpacking frame is a subset of a layer representing a region of
+            memory that was written and executed at one time.</p>
+          <p>An unpacking <i>frame</i> is a region of memory in which it is
+            observed a sequence of memory write followed by a memory execution.
+          </p>
+          <p>Types:</p>
+          <ol>
+            <li id="frames-single"><strong>Single:</strong> packers that have
+              one unpacking frame for each layer; the code is fully unpacked in
+              one layer before the next layers are unprotected.</li>
+            <li id="frames-multi"><strong>Multiple:</strong> the code of one
+              layer is reconstructed and executed one piece at a time; there are
+              multiple frames per layer.</li>
+          </ol>
+        </div>
+        <div class="col-md-4">
+          <h4>5. Code Visibility</h4>
+          <p>This property measures how the original code is revealed in
+            memory.</p>
+          <p>Types:</p>
+          <ol>
+            <li id="code-vi-full-code"><strong>Full-code </strong>
+              packers first unpack all the original code and data, and then
+              redirect the execution to the original entry point. There is
+              always a point in time in which the entire code of the malware can
+              be scanned or retrieved from memory.
+            </li>
+            <li id="code-vi-incremental"><strong>Incremental</strong> packers
+              reconstruct the original code-on demand, just before it is
+              executed.
+            </li>
+            <li id="code-vi-shifting"><strong>Shifting decode frames</strong>
+              packers packers present a more complex version of incremental
+              unpacking that involves re-packing each frame of code after its
+              execution.
+            </li>
+          </ol>
+        </div>
+        <div class="col-md-4">
+          <h4>6. Granularity</h4>
+          <p>This property measures the granularity of the protected regions of
+            code (for incremental and shifting decode frames packers).
+          </p>
+          <ol>
+            <li id="gra-page"><strong>Page</strong>, for packers whose the code
+              is unpacked one memory page at a time.</li>
+            <li id="gra-func"><strong>Function</strong>, when each function is
+              unpacked before it gets invoked.</li>
+            <li id="gra-bb-ins"><strong>Basic Block / Instruction</strong>,
+              when the unpacking is done at the level of basic blocks or single
+              instructions.</li>
+            <ol>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" id="ex-complex-types">
+    <div class="col-md-12">
+      <h3>Packer Complexity Types<h3>
+          <div class="row">
+            <div class="col-md-4" id="Type I">
+              <h4 id="type-1">Type I</h4>
+              <ul class="normal-text">
+                <li>One <a href="#layers-single">single</a> unpacking routine.
+                </li>
+                <li>This routine is executed before transferring the
+                  control to the unpacked program (which resides in the second
+                  layer).
+                </li>
+                <li>Example: UPX</li>
+              </ul>
+            </div>
+            <div class="col-md-4" id="Type II">
+              <h4 id="type-2">Type II</h4>
+              <ul class="normal-text">
+                <li><a href="#layers-multi">Multiple</a> unpacking layers.</li>
+                <li>Each layer is executed sequentially to unpack the following
+                  layer.</li>
+                <li>When the original code has been reconstructed, the last
+                  transition transfers the control to it.</li>
+              </ul>
+            </div>
+            <div class="col-md-4" id="Type III">
+              <h4 id="type-3">Type III</h4>
+              <ul class="normal-text">
+                <li><a href="#layers-multi">Multiple</a> unpacking
+                  layers.</li>
+                <li>The unpacking routines are more complex, including loops
+                  i.e., transitions back and forth between layers.</li>
+                <li>
+                  The original code is not necessarily located in the last
+                  (deepest) layer, and the last layer can contain code belonging
+                  to the packer, including routines such as integrity checks,
+                  anti-debug routines or part of the obfuscated code of the
+                  packer.
+                </li>
+                <li>A <a href="#isolation-tail-trans">tail transition</a>
+                  exists to separate the packer and the application code. Once
+                  the final application code starts executing the code belonging
+                  to the packer is not executed any more</li>
+                <li>Example: UPolyX 0.4</li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4" id="Type IV">
+              <h4 id="type-4">Type IV</h4>
+              <ul class="normal-text">
+                <li><a href="#layers-single">Single</a>- or
+                  <a href="#layers-multi">multi</a>-layer packers.</li>
+                <li>
+                  Part of the packer code (but not the one responsible for
+                  unpacking) is <a href="#isolation-interleaved">interleaved</a>
+                  with the execution of the original program.
+                </li>
+                <li>
+                  There is a moment when the entire original code is completely
+                  unpacked in memory. There can be several points in which the
+                  execution jumps from the packer code to the unpacked
+                  application. The final execution may keep jumping back and
+                  forth between different layers in different ways
+                  (multi-threaded application, hooking certain API calls etc).
+                </li>
+                <li>Example: ACProject 1.09</li>
+              </ul>
+            </div>
+            <div class="col-md-4" id="Type V">
+              <h4 id="type-5">Type V</h4>
+              <ul class="normal-text">
+                <li>The unpacking code is mangled with the
+                  original program.</li>
+                <li>The layer containing the original code has multiple frames,
+                  and the packer unpacks these frames incrementally.
+                </li>
+                <li>
+                  They have a tail jump, but only a single frame of code may
+                  have been revealed at this point. If a snapshot of the process
+                  memory is taken after the end of the program execution, all
+                  the executed code can be successfully extracted and analyzed.
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-4" id="Type VI">
+              <h4 id="type-6">Type VI</h4>
+              <ul class="normal-text">
+                <li> Packers in which only a single fragment of the original
+                  program is available in memory at any given moment in time.
+                </li>
+                <li>This fragment can be as little as a single instruction.</li>
+                <li>Example: Armadillo 8.0</li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4" id="Not packed">
+              <h4 id="type-0">Not packed</h4>
+              <ul class="normal-text">
+                <li>The sample is not packed! You got an easy one.</li>
+              </ul>
+            </div>
+          </div>
+          <br>        
+    </div>
+  </div>
+
+   <div class="row text-justify" id="ex-graphs">
+      <div class="col-md-12">
+        <h3>How to interpret graphs</h3>
+        <ul>
+          <li><a href="#graph-color-blind">Color blindness</a></li>
+          <li><a href="#graph-processes">Processes</a></li>
+          <li><a href="#graph-layers">Layers</a></li>
+          <li><a href="#graph-mem-regions-boxes">Memory regions (boxes)</a></li>
+          <li><a href="#graph-mem-write-ops">Memory write operations (green and
+              red connectors)</a></li>
+          <li><a href="#graph-exe-trans">Execution transitions (gray
+              and blue connectors)</a></li>
+          <li><a href="#graph-frames">Frames</a></li>
+        </ul>
+        <p>Graphs show the structure of the packer and provide us, at a glance,
+          a general idea of how the unpacking routines have recovered the
+          protected code.</p>
+        <h4 id="graph-color-blind">Color blindness</h4>
+        <p>The unpacking graphs are color-coded and the explanations below use 
+          colors to refer to certain parts of the graphs.</p>
+        <p>The following image shows the colors and color names that we will refer
+          to. Note that there are two types of greens, Arrow Green and Box Green,
+          that appear on arrows (connectors) and boxes respectively. </p>
+        <img class="img-responsive graph"
+             src="dpicolors.png"/>
+        
+      <h4 id="graph-processes">Processes</h4>
+        <p>Our system monitors all the processes created during execution, as 
+          well as those the sample interacts with. A graph may show one or several
+          processes, if we detect, for example, that the binary has injected
+        code to another process. Each process is designated by a process number
+          (e.g. P0, P1). The unpacking layers and memory regions of each process
+          are contained in a separate box for each process.</p>
+        <p>The graph shown below shows 2 processes.</p>
+        <img class="img-responsive graph"
+             src="3f6d798fd62f158dccf683cb27ebbf92bfd2b340ab3d6ca6ad4bdacf82351b1d20160511130549670344.png"/>
+        <h4 id="graph-layers">Layers</h4>
+        <p>Each process will have at least 1 layer of code (if some code was
+          executed), and up to any number of layers.</p>
+        <p>Each layer is represented
+          as a blank box containing horizontally aligned colored boxes (that
+          represent memory regions). Each layer has a header that follows the
+          format <code>[LayerNumber]#[NumberOfFrames]</code>. The first one indicates the
+          layer number: 0 for the executed code that was present in the binary
+          (typically, the code of the packer), and greater than 0 for every
+          unpacked layer. The second number represents the number of frames of 
+          code that the layer contains.</p>
+        <p>The figure shown below represents a 
+          packer with 4 layers (3 of them containing unpacked code, because
+          they are gray, see
+          <a href="#graph-mem-regions-boxes">Memory regions (boxes)</a>). All the
+          layers contain a single frame. Nevertheless, if we look at the 
+          previous example, the layer 1 in process P1 contains 4 different 
+          frames, given that it is an incremental packer that unpacks memory
+          pages on-demand, just before they are executed (i.e., there is one 
+          frame per memory page executed).</p>
+        <img class="img-responsive graph"
+           src="84971b955821b93f2266b073d8e1dc6587fa4a9fbddf363958449177f378761e20160623102732778320.png">
+        <h4 id="graph-mem-regions-boxes">Memory regions (boxes)</h4>
+        <p>The colored boxes inside each layer are memory regions. Each memory
+          region represents a set of contiguous memory addresses that were
+          executed. Furthermore, we group into the same region all executed 
+          instructions located at a distance lower than one memory page
+          (4096 bytes). This does not mean that the binary executed ALL the
+          possible instructions in that region, but we group them together to
+          facilitate visual representation.</p>
+        <p>These regions follow a simple color scheme:</p>
+        <ul>
+          <li><strong>Yellow regions.</strong> Represent regions in which there is not a single
+            instruction that wrote the memory of another region. In other words,
+            it represents a piece of code with no unpacking behavior.
+          </li>
+          <li><strong>Gray regions.</strong> These regions, on the contrary, contain at least one 
+            instruction that wrote the memory of another region: it shows some
+            unpacking behavior.
+          </li>
+          <li><strong>Green regions.</strong>There regions represent memory that has been written 
+            remotely from another process (either via <samp>WriteProcessMemory</samp>, shared
+            memory regions, or by loading a file that was written by another process).
+          </li>
+          <li><strong>Red regions.</strong> You will only find one red region in each graph,
+            and it contains the last instruction that was executed during analysis.
+          </li>
+        </ul>
+        <p>Also, the regions contain 4 lines of text with different types of
+          information:</p>
+        <ul>
+          <li><strong>Line 1: Type of memory and base address.</strong>
+            We distinguish between 3
+            types of memory. “M” for module address space, “H” for heap, “S”
+            for stack, and finally, we will use “N” whenever our system does not
+            properly retrieve the memory type.</li>
+          <li><strong>Line 2: Size.</strong> The size of the region in bytes
+            (in hexadecimal).</li>
+          <li><strong>Line 3: APIs executed.</strong>
+            It shows 3 attributes separated by #. <code>[NumAPICalls]#[NumDiffAPICalls]#[APICallsByFamily]</code>
+            <p>The first one represents the total number of API calls made from the
+              region.
+              The second, the number of different API calls executed,
+              and finally, there are 4 spaces for 4 letters: “VCGM”. Each letter
+              represents the presence of a given family of API calls
+              (an underscore “_” represents the absence of such API call).
+              “V” corresponds to the <samp>GetVersion</samp> function family, “C”
+              corresponds
+              to the <samp>GetCommandLine</samp> function family, “G” corresponds to the
+              <samp>GetModuleHandle</samp> function family, and finally “M” corresponds to the
+              <samp>MessageBox</samp> related group of functions. The first 3 groups of APIs
+              are related to typical C runtime API calls, and are sometimes used
+              as a way to locate the original entry point of an application.
+              <samp>MessageBox</samp> related functions were also monitored for testing
+              purposes, and are left because many unpack-me challenges show a
+              message box as a payload.
+              See <a href="#api-calls">API call families</a> for more information.
+            </p>
+          </li>
+          <li><strong>Line 4: Frames.</strong> 
+            Finally, the last line represents the number of 
+            frames that the region contains.</li>
+        </ul>
+        <h4 id="graph-mem-write-ops">Memory write operations (green and red connectors)</h4>
+        <p>Memory write operations between regions are represented as green and
+          red connectors. The green color is used whenever a region writes the
+          memory of another region. In contrast, the red color is used
+          whenever there is a memory write and a execution transition between
+          the same pair of regions. If a region writes another region and then
+          the execution jumps to this code, the connector will be represented
+          in red. Each connector has an hexadecimal number next to it, showing
+          the number of bytes written. For clarity, we only show the connectors
+          between contiguous layers. Showing all the connections would produce
+          and unreadable graph in certain cases.</p>
+        <h4 id="graph-exe-trans">Execution transitions (gray and blue connectors)</h4>
+        <p>Execution transitions are depicted as gray connectors, and show the
+          execution jumps from one region to another region in the following 
+          layer. Like for memory write operations, we omit execution transitions 
+          that occur inside the same layer, as well as transitions between 
+          non-contiguous layers. The number shown next to each connector
+          represents the number of transitions observed. If the connector is
+          blue instead of gray, it means the transition occurred between two
+          different processes. An inter-process transition does not imply
+          process synchronization and might just be a consequence of process
+          scheduling.</p>
+        <h4 id="graph-frames">Frames</h4>
+        <p>
+          As described before, the number of frames is represented at two
+          different points: at layer level, and at region level. These numbers
+          may not coincide, but why? A frame represents a set of memory regions
+          written and executed at one time. For instance, imagine a packer that 
+          first unpacks and executes a given routine, then goes back to the 
+          packer code, unpacks another one, and then executes it. This packer
+          would present two frames, one for each routine. The explanation for
+          counting the number of frames with two different granularities (layer
+          and region) is simple: these two frames may be located in the same 
+          layer (and therefore, the layer header would show “2” next to the 
+          layer number”), but the code for each frame might be located in 
+          different regions, and thus each region would contain only one frame 
+          of code. Now, look at the first example graph. Layer 1 in process 1 
+          has 4 frames. Nevertheless, only the region starting at 0x401000 
+          contains 2 frames. This packer protects each memory page separately,
+          so, whenever the execution jumps to a protected memory page, the
+          packer comes in and decrypts its contents (resulting in a new frame).
+          The only region with a size greater than one page is the one at 
+          0x401000 (with 0x1001 bytes), and as a consequence, it presents 2
+          frames.
+        </p>
+      </div>
+      <div class="col-md-12 row text-justify" id="api-calls">
+        <h3>API call families</h3>
+        <p>We monitor API calls and check whenever certain specific API functions
+          are used. A typical heuristic to find the original code is to wait
+          until its C run-time initialization routine is executed. Therefore, we
+          monitor the execution of the following functions, related to these
+          initialization routines.</p>
+        <ul>
+        <li><strong>GetVersion* family (V)</strong>: GetVersion, GetVersionExA,
+          and GetVersionExW.</li>
+        <li><strong>GetCommandLine* family (C)</strong>: GetCommandLineA and
+          GetCommandLineW.</li>
+        <li><strong>GetModuleHandle* family (G)</strong>: GetModuleHandleA,
+          GetModuleHandleW, GetModuleHandleExA and GetModuleHandleExW.</li>
+        <li><strong>MessageBox* family (M)</strong>: MessageBox, MessageBoxEx
+          and MessageBoxIndirect.
+        </ul>
+      </div>
+    </div>
+   
+  <br>
+</div>
+
+</div>
+<footer class="doc-footer">
+  <div class="container">
+    <p>
+      &copy; 2015 - <span id="CURRENTYEAR"></span> DeustoTech
+      <br>
+    </p> 
+    <p><a href="disclaimer.html">Disclaimer</a>&nbsp;&nbsp;&nbsp;
+      |&nbsp;&nbsp;&nbsp;<a href="#reference">Reference</a>
+      |&nbsp;&nbsp;&nbsp;<a href="contact.html">Contact</a>
+    </p>
+    <img src="box-mini.png"
+         height="20" width="20">
+    <br><p>~</p>
+    <p>DPI 0.1.0</p>
+  </div>
+</footer>
+  <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+   
+    <!--script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script-->
+<link rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<link rel="stylesheet"
+      href="style.css">
+<!-- script src="/ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script -->
+<!-- chart.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<!-- magnify -->
+<link rel="stylesheet" href="bootstrap-magnify.min.css">
+<script src="bootstrap-magnify.min.js"></script>
+<!-- custom -->
+<script src="script.js"></script>
+  
+  
+  </body>
+</html>
